@@ -8,7 +8,7 @@
 
 namespace reversi {
 
-const std::size_t field_size = 8;
+const std::size_t field_size = 4;
 
 class field {
     const int dx[8];
@@ -54,8 +54,8 @@ class field {
     }
 
     void make_turn(int i, int j, char c);
-    bool can_turn(int i, int j, char c);
-    std::vector<std::pair<int, int> > possible_turns(char c);
+    bool can_turn(int i, int j, char c) const;
+    std::vector<std::pair<int, int> > possible_turns(char c) const;
 };
     
 }
