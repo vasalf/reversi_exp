@@ -124,6 +124,19 @@ reversi/fast:
 .PHONY : reversi/fast
 
 #=============================================================================
+# Target rules for targets named strategy
+
+# Build rule for target.
+strategy: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 strategy
+.PHONY : strategy
+
+# fast build rule for target.
+strategy/fast:
+	$(MAKE) -f strategy/CMakeFiles/strategy.dir/build.make strategy/CMakeFiles/strategy.dir/build
+.PHONY : strategy/fast
+
+#=============================================================================
 # Target rules for targets named reversi-cl
 
 # Build rule for target.
@@ -145,6 +158,7 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... reversi"
+	@echo "... strategy"
 	@echo "... reversi-cl"
 .PHONY : help
 
