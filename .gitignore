@@ -12,3 +12,4 @@ reversi-cl/reversi-cl
 
 # libraries
 reversi/libreversi.a
+strategy/libstrategy.a
