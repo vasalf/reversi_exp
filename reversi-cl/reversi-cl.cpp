@@ -3,6 +3,7 @@
 #include <sstream>
 #include <cstddef>
 #include <memory>
+#include <random>
 
 #include <gflags/gflags.h>
 
@@ -12,6 +13,8 @@
 #include <reversi/game_controller.h>
 
 #include <strategy/random.h>
+#include <strategy/best_scoring.h>
+#include <strategy/scorings.h>
 
 namespace reversi {
     namespace player {
@@ -77,9 +80,16 @@ void print_field(const reversi::field & field) {
 DEFINE_string(black, "human", "The black strategy (human, random, etc)");
 DEFINE_string(white, "human", "The white strategy (human, random, etc)");
 
+bool is_prefix(std::string t, std::string s) {
+    return std::mismatch(t.begin(), t.end(), s.begin()).first == t.end();
+}
+
 bool is_correct_strategy(const char *flagname, const std::string &value) {
-    return value == "human"
-        || value == "random";
+    if (value == "human"
+        || value == "random")
+        return true;
+    if (is_prefix("bs:", value))
+        return true;
 }
 
 DEFINE_validator(black, &is_correct_strategy);
@@ -90,6 +100,19 @@ std::unique_ptr<reversi::player::player> get_strategy(std::string flag, char who
         return std::make_unique<reversi::player::human>(who);
     else if (flag == "random")
         return std::make_unique<reversi::player::random>(who);
+    else if (is_prefix("bs:", flag)) {
+        if (flag == "bs:by_score")
+            return std::make_unique<reversi::player::best_scoring<reversi::scoring::by_score> >(who);
+        else if (flag == "bs:random") {
+            reversi::scoring::weighted_quater<double> scoring;
+            scoring.gen_random<std::mt19937>();
+            return std::make_unique<reversi::player::best_scoring<decltype(scoring)> >(who, scoring);
+        } else {
+            reversi::scoring::weighted_quater<double> scoring;
+            scoring.read(flag.substr(3));
+            return std::make_unique<reversi::player::best_scoring<decltype(scoring)> >(who, scoring);
+        }
+    }
 }
 
 int main(int argc, char* argv[]) {
