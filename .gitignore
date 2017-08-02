@@ -13,3 +13,5 @@ reversi-cl/reversi-cl
 # libraries
 reversi/libreversi.a
 strategy/libstrategy.a
+genetics/libgenetics.a
+gothello/libgothello.a

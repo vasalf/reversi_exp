@@ -3,4 +3,6 @@ project (reversi_exp)
 
 add_subdirectory (reversi)
 add_subdirectory (strategy)
+add_subdirectory (genetics)
+add_subdirectory (gothello)
 add_subdirectory (reversi-cl)

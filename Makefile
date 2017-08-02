@@ -137,6 +137,32 @@ strategy/fast:
 .PHONY : strategy/fast
 
 #=============================================================================
+# Target rules for targets named genetics
+
+# Build rule for target.
+genetics: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 genetics
+.PHONY : genetics
+
+# fast build rule for target.
+genetics/fast:
+	$(MAKE) -f genetics/CMakeFiles/genetics.dir/build.make genetics/CMakeFiles/genetics.dir/build
+.PHONY : genetics/fast
+
+#=============================================================================
+# Target rules for targets named gothello
+
+# Build rule for target.
+gothello: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 gothello
+.PHONY : gothello
+
+# fast build rule for target.
+gothello/fast:
+	$(MAKE) -f gothello/CMakeFiles/gothello.dir/build.make gothello/CMakeFiles/gothello.dir/build
+.PHONY : gothello/fast
+
+#=============================================================================
 # Target rules for targets named reversi-cl
 
 # Build rule for target.
@@ -159,6 +185,8 @@ help:
 	@echo "... edit_cache"
 	@echo "... reversi"
 	@echo "... strategy"
+	@echo "... genetics"
+	@echo "... gothello"
 	@echo "... reversi-cl"
 .PHONY : help
 
