@@ -28,7 +28,10 @@ public:
 
 template<typename score_type>
 class weighted_quater {
+public:
     static const std::size_t half_field = field_size / 2;
+
+private:
     std::array<std::array<score_type, half_field>, half_field> weights_;
     
 public:

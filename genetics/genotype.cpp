@@ -63,10 +63,12 @@ genotype &genotype::operator=(genotype &&other) {
 }
 
 genotype::bitreference genotype::operator[](std::size_t i) {
+    assert(i < n_bits_);
     return genotype::bitreference(s_, i);
 }
 
 bool genotype::operator[](std::size_t i) const {
+    assert(i < n_bits_);
     return genotype::bitreference(s_, i);
 }
 
@@ -74,7 +76,7 @@ void genotype::cross_over(const genotype &a, std::size_t l, std::size_t r) {
     assert(a.size() == size());
 
     std::size_t li = l / (8 * sizeof(storage));
-    std::size_t ri = (r + 8 * sizeof(storage) - 1) / (8 * sizeof(storage));
+    std::size_t ri = r / (8 * sizeof(storage));
 
     for (std::size_t i = l; i != 8 * sizeof(storage) * (li + 1) && i != r; i++) {
         bitreference b(s_, i);
