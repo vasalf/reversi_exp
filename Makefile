@@ -175,6 +175,19 @@ reversi-cl/fast:
 	$(MAKE) -f reversi-cl/CMakeFiles/reversi-cl.dir/build.make reversi-cl/CMakeFiles/reversi-cl.dir/build
 .PHONY : reversi-cl/fast
 
+#=============================================================================
+# Target rules for targets named reversigp
+
+# Build rule for target.
+reversigp: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 reversigp
+.PHONY : reversigp
+
+# fast build rule for target.
+reversigp/fast:
+	$(MAKE) -f reversigp/CMakeFiles/reversigp.dir/build.make reversigp/CMakeFiles/reversigp.dir/build
+.PHONY : reversigp/fast
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -188,6 +201,7 @@ help:
 	@echo "... genetics"
 	@echo "... gothello"
 	@echo "... reversi-cl"
+	@echo "... reversigp"
 .PHONY : help
 
 

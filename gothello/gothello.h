@@ -34,21 +34,22 @@ public:
         virtual iterator end() = 0;
     };
 
-    template<class individual_t>
+    template<class strategy_t>
     class population_storer : public basic_population_storer {
-        std::shared_ptr<genetics::population<individual_t, phenotype_ptr> > population_;
+        std::shared_ptr<genetics::population<phenotype_ptr, player_factory<strategy_t> > > population_;
     public:
-        population_storer(std::shared_ptr<genetics::population<individual_t, phenotype_ptr> > population)
+        population_storer(std::shared_ptr<genetics::population<phenotype_ptr, player_factory<strategy_t> > > population)
             : population_(population) {}
         virtual ~population_storer() = default;
 
         typedef basic_population_storer::iterator iterator;
         
         virtual iterator new_generation(const genetics_engine &eng) override {
+            player_fitness pf;
             return population_->template new_generation<elo_t, player_fitness>(std::ceil(eng.config.alivers * population_->size()),
                                                                                population_->size(),
-                                                                               config.mutation_frequency,
-                                                                               player_fitness());
+                                                                               eng.config.mutation_frequency,
+                                                                               pf);
         }
         
         virtual std::size_t size() const override {
@@ -74,9 +75,9 @@ private:
 public:
     genetics_engine() {}
 
-    template<class individual_t>
-    void add_population(std::shared_ptr<genetics::population<individual_t, phenotype_ptr> > population) {
-        populations_.push_back(std::make_shared<population_storer<individual_t> >(population));
+    template<class strategy_t>
+    void add_population(std::shared_ptr<genetics::population<phenotype_ptr, player_factory<strategy_t> > > population) {
+        populations_.push_back(std::make_shared<population_storer<strategy_t> >(population));
     }
     
     void play_tournaments();

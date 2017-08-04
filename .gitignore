@@ -9,6 +9,7 @@ CTestTestfile.cmake
 
 # executables
 reversi-cl/reversi-cl
+reversigp/reversigp
 
 # libraries
 reversi/libreversi.a

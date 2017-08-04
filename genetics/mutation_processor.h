@@ -12,7 +12,8 @@ public:
     void operator()(rnd_eng &rnd, genotype &g) {
         std::uniform_int_distribution<std::size_t> dist(0, g.size() - 1);
         std::size_t i = dist(rnd);
-        g[i] = !g[i];
+        if (i < g.size())
+            g[i] = !g[i];
     }
 };
 

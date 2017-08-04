@@ -44,10 +44,11 @@ public:
 template<class phenotype>
 using basic_individual_ptr = std::shared_ptr<basic_individual<phenotype> >;
 
-template<class individual_t, class phenotype,
+template<class phenotype, class phenotype_factory_t,
          class merge_processor = bitwise_crossingover,
          class mutation_processor = random_bit_flip>
 class population : public std::vector<basic_individual_ptr<phenotype> > {
+    phenotype_factory_t pf_;
     merge_processor cp_;
     mutation_processor mp_;
 
@@ -66,9 +67,11 @@ class population : public std::vector<basic_individual_ptr<phenotype> > {
 public:
     typedef basic_individual_ptr<phenotype> stored_t;
     
-    population(merge_processor cp = merge_processor(), mutation_processor mp = mutation_processor())
+    population(phenotype_factory_t pf = phenotype_factory_t(),
+               merge_processor cp = merge_processor(),
+               mutation_processor mp = mutation_processor())
         : std::vector<basic_individual_ptr<phenotype> >(),
-        cp_(cp), mp_(mp){}
+        pf_(pf), cp_(cp), mp_(mp){}
 
     /** This function does one iteration of lifecycle.
       * New individuals are placed into the end of population
@@ -99,7 +102,7 @@ public:
 
         std::vector<fitness_t> probabilities;
         for (auto & individual : *this) {
-            probabilities.push_back(fitness_calculator(individual));
+            probabilities.push_back(fitness_calculator(individual->get_phenotype()));
         }
         std::vector<fitness_t> partial_sums = { 0 };
         std::partial_sum(probabilities.begin(), probabilities.end(),
@@ -117,7 +120,7 @@ public:
 
             genotype individual_g = cp_((*(this->begin() + f_i))->get_genotype(),
                                         (*(this->begin() + m_i))->get_genotype());
-            stored_t individual = std::make_shared<individual_t>(individual_g);
+            stored_t individual = pf_(individual_g);
 
             std::size_t mutations = gen_in_range<double>(rnd, 0, mutation_frequency);
             for (std::size_t m = 0; m != mutations; m++)

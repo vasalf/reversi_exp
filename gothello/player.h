@@ -16,7 +16,7 @@ public:
     elo_t & get_ratings() { return ratings_; }
     const elo_t & get_ratings() const { return ratings_; }
     
-    virtual std::shared_ptr<reversi::player::player> get_strategy() = 0;
+    virtual std::shared_ptr<reversi::player::player> get_strategy(char who) = 0;
 };
 typedef std::shared_ptr<basic_player_phenotype> phenotype_ptr;
 
@@ -26,10 +26,12 @@ class player_phenotype : public basic_player_phenotype {
 public:
     player_phenotype(const genetics::genotype &g)
         : impl_(std::make_shared<impl_strategy>(g)) {}
+    player_phenotype(const impl_strategy &s)
+        : impl_(std::make_shared<impl_strategy>(s)) {}
     virtual ~player_phenotype() = default;
 
-    virtual std::shared_ptr<reversi::player::player> get_stragegy() override {
-        return impl_;
+    virtual std::shared_ptr<reversi::player::player> get_strategy(char who) override {
+        return impl_->create_player(who);
     }
 };
 
@@ -38,7 +40,7 @@ struct player_fitness {
         return ph->get_ratings();
     }
 };
-
+    
 class player : public genetics::basic_individual<phenotype_ptr> {
     phenotype_ptr phenotype_;
 
@@ -51,6 +53,14 @@ public:
 
     virtual phenotype_ptr &get_phenotype() { return phenotype_; }
     virtual const phenotype_ptr &get_phenotype() const { return phenotype_; }
+};
+
+template<class strategy>
+class player_factory {
+public:
+    std::shared_ptr<player> operator()(const genetics::genotype &g) {
+        return std::make_shared<player>(g, std::make_shared<player_phenotype<strategy> >(g));
+    }
 };
 
 }
