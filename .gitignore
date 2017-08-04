@@ -11,6 +11,10 @@ CTestTestfile.cmake
 reversi-cl/reversi-cl
 reversigp/reversigp
 
+# tests
+Testing/*
+test/test_genotype
+
 # libraries
 reversi/libreversi.a
 strategy/libstrategy.a

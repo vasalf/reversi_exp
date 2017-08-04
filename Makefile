@@ -78,6 +78,17 @@ edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
 
+# Special rule for the target test
+test:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
+	/usr/bin/ctest --force-new-ctest-process $(ARGS)
+.PHONY : test
+
+# Special rule for the target test
+test/fast: test
+
+.PHONY : test/fast
+
 # The main all target
 all: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/platypus/git/reversi_exp/CMakeFiles /home/platypus/git/reversi_exp/CMakeFiles/progress.marks
@@ -188,6 +199,19 @@ reversigp/fast:
 	$(MAKE) -f reversigp/CMakeFiles/reversigp.dir/build.make reversigp/CMakeFiles/reversigp.dir/build
 .PHONY : reversigp/fast
 
+#=============================================================================
+# Target rules for targets named test_genotype
+
+# Build rule for target.
+test_genotype: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 test_genotype
+.PHONY : test_genotype
+
+# fast build rule for target.
+test_genotype/fast:
+	$(MAKE) -f test/CMakeFiles/test_genotype.dir/build.make test/CMakeFiles/test_genotype.dir/build
+.PHONY : test_genotype/fast
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -196,12 +220,14 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
+	@echo "... test"
 	@echo "... reversi"
 	@echo "... strategy"
 	@echo "... genetics"
 	@echo "... gothello"
 	@echo "... reversi-cl"
 	@echo "... reversigp"
+	@echo "... test_genotype"
 .PHONY : help
 
 
