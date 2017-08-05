@@ -14,6 +14,8 @@ private:
     std::size_t s_sz_;
     std::size_t n_bits_;
 
+    void swap(genotype &g);
+    
 public:
 
     class bitreference {

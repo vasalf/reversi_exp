@@ -128,6 +128,16 @@ TEST(Genotype, size) {
     EXPECT_EQ(s1791791.size(), 1791791);
 }
 
+TEST(Genotype, bitreference_assignment) {
+    genetics::genotype g(1);
+    g[0] = false;
+    EXPECT_EQ(g[0], false);
+    genetics::genotype::bitreference b = g[0];
+    b = true;
+    EXPECT_EQ(b, true);
+    EXPECT_EQ(g[0], true);
+}
+
 genetics::genotype dummy_crossing_over(genetics::genotype g, genetics::genotype h, std::size_t l, std::size_t r) {
     for (std::size_t i = l; i != r + 1; i++) {
         g[i] = h[i];
@@ -135,8 +145,9 @@ genetics::genotype dummy_crossing_over(genetics::genotype g, genetics::genotype 
     return g;
 }
 
+
 TEST(Genotype, cross_over) {
-    const std::size_t size = 1e6 + 179;
+    const std::size_t size = 20;//1e6 + 179;
     genetics::genotype g(size), h(size);
     std::mt19937 rnd(179);
     std::uniform_int_distribution<int> dist(0, 1);
@@ -147,8 +158,18 @@ TEST(Genotype, cross_over) {
     genetics::genotype exp = dummy_crossing_over(g, h, 1, size - 1);
     g.cross_over(h, 1, size - 1);
     for (std::size_t i = 0; i != size; i++) {
-        EXPECT_EQ(exp[i], g[i]);
+        EXPECT_EQ(g[i], exp[i]);
     }
+}
+
+TEST(Genotype, move_constructor) {
+    genetics::genotype g(5);
+    genetics::genotype h(std::move(g));
+}
+
+TEST(Genotype, move_assignment) {
+    genetics::genotype g(5);
+    genetics::genotype h = std::move(g);
 }
 
 int main(int argc, char *argv[]) {
