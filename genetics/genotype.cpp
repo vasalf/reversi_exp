@@ -55,7 +55,7 @@ genotype &genotype::operator=(genotype other) {
 }
 
 genotype::genotype(genotype &&other)
-    : n_bits_(0), s_sz_(0), s_(nullptr) {
+    : s_(nullptr), s_sz_(0), n_bits_(0) {
     this->swap(other);
 }
 

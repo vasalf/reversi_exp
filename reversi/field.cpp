@@ -2,8 +2,8 @@
 
 namespace reversi {
 
-inline bool ok(int i, int j) {
-    return 0 <= i && i < field_size && 0 <= j && j < field_size;
+inline bool ok(std::size_t i, std::size_t j) {
+    return i < field_size && j < field_size;
 }
     
 void field::make_turn(int i, int j, char c) {
@@ -55,8 +55,8 @@ bool field::can_turn(int i, int j, char c) const {
 
 std::vector<std::pair<int, int> > field::possible_turns(char c) const {
     std::vector<std::pair<int, int> > res;
-    for (int i = 0; i < field_size; i++)
-        for (int j = 0; j < field_size; j++)
+    for (std::size_t i = 0; i < field_size; i++)
+        for (std::size_t j = 0; j < field_size; j++)
             if (can_turn(i, j, c))
                 res.push_back(std::make_pair(i, j));
     if (res.empty())

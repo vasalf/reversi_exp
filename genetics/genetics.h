@@ -89,7 +89,7 @@ public:
       *                              individual
       */
     template<class fitness_t, class fitness_p, class rnd_gen = std::mt19937>
-    typename std::vector<basic_individual_ptr<phenotype> >::iterator new_generation(int alivers, int new_size,
+    typename std::vector<basic_individual_ptr<phenotype> >::iterator new_generation(std::size_t alivers, std::size_t new_size,
                             double mutation_frequency,
                             fitness_p &fitness_calculator) {
         assert(alivers <= this->size());

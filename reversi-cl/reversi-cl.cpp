@@ -84,12 +84,13 @@ bool is_prefix(std::string t, std::string s) {
     return std::mismatch(t.begin(), t.end(), s.begin()).first == t.end();
 }
 
-bool is_correct_strategy(const char *flagname, const std::string &value) {
+bool is_correct_strategy([[gnu::unused]] const char *flagname, const std::string &value) {
     if (value == "human"
         || value == "random")
         return true;
     if (is_prefix("bs:", value))
         return true;
+    return false;
 }
 
 DEFINE_validator(black, &is_correct_strategy);
@@ -113,6 +114,7 @@ std::unique_ptr<reversi::player::player> get_strategy(std::string flag, char who
             return std::make_unique<reversi::player::best_scoring<decltype(scoring)> >(who, scoring);
         }
     }
+    return NULL;
 }
 
 int main(int argc, char* argv[]) {

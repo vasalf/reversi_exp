@@ -19,8 +19,8 @@ private:
 public:
 
     class bitreference {
-        std::size_t bit_;
         storage *s_;
+        std::size_t bit_;
     public:
         bitreference(storage *s, std::size_t bit)
             : s_(s), bit_(bit) {}
