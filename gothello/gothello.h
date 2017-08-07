@@ -83,6 +83,14 @@ public:
     void play_tournaments();
 
     void /* Here comes the young, the */ new_generation();
+
+    typedef std::vector<std::shared_ptr<basic_population_storer> >::const_iterator iterator;
+
+    iterator begin() const { return populations_.begin(); }
+    iterator end() const { return populations_.end(); }
+
+    std::size_t size() const { return populations_.size(); }
+    const std::shared_ptr<basic_population_storer>& operator[](std::size_t i) const { return populations_[i]; };
 };
     
 }

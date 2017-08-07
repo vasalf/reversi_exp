@@ -40,7 +40,13 @@ int main() {
         eng.play_tournaments();
         std::cout << "played tournaments" << std::endl;
         eng.new_generation();
-        std::cout << "next generation" << std::endl;
+        double s = 0, n = 0;
+        for (const auto &storer : eng) {
+            n += storer->size();
+            for (const auto &strategy : *storer)
+                s += strategy->get_phenotype()->get_ratings();
+        }
+        std::cout << "next generation (avg. elo = " << s / n << ")" << std::endl;
     }
     
 }

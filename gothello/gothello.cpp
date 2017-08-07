@@ -25,8 +25,13 @@ void genetics_engine::play_tournaments() {
 }
 
 void genetics_engine::new_generation() {
-    for (auto &p : populations_)
-        p->new_generation(*this);
+    for (auto &p : populations_) {
+        auto it = p->new_generation(*this);
+        while (it != p->end()) {
+            (*it)->get_phenotype()->get_ratings() = 1500;
+            it++;
+        }
+    }
 }
 
 }
