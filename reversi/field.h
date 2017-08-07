@@ -8,7 +8,7 @@
 
 namespace reversi {
 
-const std::size_t field_size = 4;
+const std::size_t field_size = 8;
 
 class field {
     const int dx[8];

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstring>
+
 #include <strategy/scorings.h>
 #include <genetics/genotype.h>
 
@@ -13,6 +15,7 @@ class weighted_quater {
     // tss is for transcrption start site 
     score_type transcript(const genetics::genotype &g, std::size_t tss) {
         char data[sizeof(score_type)];
+        std::memset(data, 0, sizeof(data));
         for (std::size_t j = 0; j != sizeof(score_type); j++) {
             for (std::size_t k = 0; k != 8; k++) {
                 data[j] |= g[tss + j * 8 + k] << k;

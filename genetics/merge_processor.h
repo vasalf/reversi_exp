@@ -14,6 +14,7 @@ class bitwise_crossingover {
 
     template<class rnd_eng>
     std::pair<std::size_t, std::size_t> gen_range(rnd_eng &rnd, std::size_t n) {
+        assert(n > 0);
         std::uniform_int_distribution<std::size_t> dist(0, n - 1);
         std::size_t l = dist(rnd), r = dist(rnd);
         if (l > r)

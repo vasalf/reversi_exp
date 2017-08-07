@@ -1,5 +1,7 @@
 #include <iostream>
 #include <random>
+#include <cstdio>
+#include <algorithm>
 
 #include <gothello/gothello.h>
 #include <gothello/strategy.h>
@@ -36,17 +38,24 @@ int main() {
     gothello::genetics_engine eng;
     eng.add_population<strategy_t>(p);
 
+    int ng = 1;
     while (true) {
         eng.play_tournaments();
         std::cout << "played tournaments" << std::endl;
         eng.new_generation();
         double s = 0, n = 0;
+        gothello::elo_t mn = std::numeric_limits<gothello::elo_t>::max();
+        gothello::elo_t mx = std::numeric_limits<gothello::elo_t>::min();
         for (const auto &storer : eng) {
             n += storer->size();
-            for (const auto &strategy : *storer)
+            for (const auto &strategy : *storer) {
                 s += strategy->get_phenotype()->get_ratings();
+                mn = std::min(mn, strategy->get_phenotype()->get_ratings());
+                mx = std::max(mx, strategy->get_phenotype()->get_ratings());
+            }
         }
-        std::cout << "next generation (avg. elo = " << s / n << ")" << std::endl;
+        printf("new generation (ng=%d, elo: min=%d, max=%d, avg=%.02f)\n", ng, mn, mx, s / n);
+        ++ng;
     }
     
 }

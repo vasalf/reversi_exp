@@ -12,3 +12,12 @@ add_executable (test_genotype test_genotype.cpp)
 target_link_libraries (test_genotype genetics)
 
 add_test (Genotype test_genotype)
+
+add_executable (test_genotype_to_phenotype_conversions test_genotype_to_phenotype_conversions.cpp)
+target_link_libraries (test_genotype_to_phenotype_conversions
+  genetics
+  gothello
+  reversi)
+
+add_test (GenotypeToPhenotypeConversions
+  test_genotype_to_phenotype_conversions)
