@@ -27,6 +27,7 @@ int main() {
         scoring_w_t scoring_w(scoring);
         strategy_t strategy(scoring);
         gothello::phenotype_ptr phenotype = std::make_shared<phenotype_t>(strategy);
+        phenotype->get_ratings() = 1500;
         genetics::genotype genotype = strategy.get_genotype();
         player_ptr player = std::make_shared<gothello::player>(genotype, phenotype);
         p->push_back(player);

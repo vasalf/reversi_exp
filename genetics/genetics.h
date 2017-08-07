@@ -54,12 +54,14 @@ class population : public std::vector<basic_individual_ptr<phenotype> > {
 
     template<class fitness_t, class rnd_eng>
     typename std::enable_if<std::is_integral<fitness_t>::value, fitness_t>::type gen_in_range(rnd_eng &eng, fitness_t start, fitness_t end) {
+        assert(start <= end);
         std::uniform_int_distribution<fitness_t> dist(start, end);
         return dist(eng);
     }
 
     template<class fitness_t, class rnd_eng>
     typename std::enable_if<std::is_floating_point<fitness_t>::value, fitness_t>::type gen_in_range(rnd_eng &eng, fitness_t start, fitness_t end) {
+        assert(start <= end);
         std::uniform_real_distribution<fitness_t> dist(start, end);
         return dist(eng);
     }
