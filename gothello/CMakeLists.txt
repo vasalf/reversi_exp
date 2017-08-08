@@ -6,5 +6,6 @@ include_directories (${CMAKE_CURRENT_SOURCE_DIR}/..)
 add_library (gothello STATIC
   gothello.cpp
   tournament.cpp
-  elo.cpp)
-
+  elo.cpp
+  sigsegv.cpp)
+target_link_libraries (gothello dl)

@@ -7,12 +7,14 @@
 #include <gothello/strategy.h>
 #include <gothello/scoring.h>
 #include <gothello/player.h>
+#include <gothello/sigsegv.h>
 #include <genetics/genetics.h>
 #include <strategy/best_scoring.h>
 
 const int sz = 100;
 
 int main() {
+    utils::sigsegv_handler sh;
 
     typedef reversi::scoring::weighted_quater<double> scoring_t;
     typedef gothello::scoring::weighted_quater<double> scoring_w_t;

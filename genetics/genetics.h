@@ -115,10 +115,11 @@ public:
         
         std::vector<stored_t> new_individuals;
         for (std::size_t i = 0; i != (std::size_t)(new_size - alivers); i++) {
-            fitness_t ff = gen_in_range<fitness_t>(rnd, 0, partial_sums.back());
-            fitness_t fm = gen_in_range<fitness_t>(rnd, 0, partial_sums.back());
+            fitness_t ff = gen_in_range<fitness_t>(rnd, 0, partial_sums.back() - 1);
+            fitness_t fm = gen_in_range<fitness_t>(rnd, 0, partial_sums.back() - 1);
             std::size_t f_i = std::prev(std::upper_bound(partial_sums.begin(), partial_sums.end(), ff)) - partial_sums.begin();
             std::size_t m_i = std::prev(std::upper_bound(partial_sums.begin(), partial_sums.end(), fm)) - partial_sums.begin();
+            assert(f_i < this->size() && m_i < this->size());
 
             genotype individual_g = cp_((*(this->begin() + f_i))->get_genotype(),
                                         (*(this->begin() + m_i))->get_genotype());
