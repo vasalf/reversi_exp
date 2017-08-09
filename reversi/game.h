@@ -30,6 +30,7 @@ public:
 
    void make_turn(int i, int j) {
        current_.make_turn(i, j, turn_);
+       record_.push_back(std::make_pair(i, j));
        turn_ = (turn_ == 'w' ? 'b' : 'w');
    }
 

@@ -17,14 +17,8 @@ namespace genetics {
 
 template<class phenotype>
 class basic_individual {
-    struct info {
-        std::string name = "";
-        std::size_t generation;
-    };
-    
 private:
     genotype genotype_;
-    info info_;
     
 public:    
     basic_individual(const genotype& genotype)
@@ -33,9 +27,6 @@ public:
 
     genotype &get_genotype() { return genotype_; }
     const genotype &get_genotype() const { return genotype_; }
-
-    info &get_info() { return info_; }
-    const info &get_info() const { return info_; }
 
     virtual phenotype &get_phenotype() = 0;
     virtual const phenotype &get_phenotype() const = 0;

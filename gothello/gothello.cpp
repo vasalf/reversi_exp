@@ -3,10 +3,10 @@
 namespace gothello {
 
 void genetics_engine::play_tournaments() {
-    std::vector<genetics::basic_individual_ptr<phenotype_ptr> > players;
+    std::vector<std::shared_ptr<player> > players;
     for (auto &p : populations_)
         for (auto &q : *p)
-            players.push_back(q);
+            players.push_back(std::dynamic_pointer_cast<player, genetics::basic_individual<phenotype_ptr> >(q));
     for (std::size_t nt = 0; nt < config.ntournaments; nt++) {
         std::sort(players.begin(), players.end(), [](const auto &a, const auto &b) -> bool {
                 return a->get_phenotype()->get_ratings() > b->get_phenotype()->get_ratings();

@@ -1,9 +1,41 @@
+#include <fstream>
+#include <sstream>
+
 #include <gothello/tournament.h>
 #include <gothello/elo.h>
 #include <reversi/player/player.h>
 #include <reversi/game_controller.h>
 
 namespace gothello {
+
+static inline void write_size_t(std::size_t s, std::ofstream &ofs) {
+    ofs.write(reinterpret_cast<char *>(&s), sizeof(std::size_t));
+}
+
+void game_info::write_rgf(std::string filename) const {
+    std::ofstream ofs(filename, std::ios::binary);
+    if (!ofs)
+        throw rgf_exception("Could not open file " + filename + " for writing");
+
+    write_size_t(black->get_phenotype()->name().size(), ofs);
+    ofs.write(black->get_phenotype()->name().c_str(), black->get_phenotype()->name().size());
+    write_size_t(white->get_phenotype()->name().size(), ofs);
+    ofs.write(white->get_phenotype()->name().c_str(), white->get_phenotype()->name().size());
+
+    write_size_t(record.size(), ofs);
+    for (std::pair<int, int> p : record) {
+        write_size_t(p.first, ofs);
+        write_size_t(p.second, ofs);
+    }
+
+    ofs.close();
+}
+
+void tournament::prepare() {
+    for (std::shared_ptr<player> p : *this) {
+        start_elo_.push_back(p->get_phenotype()->get_ratings());
+    }
+}
 
 const score_t win_score = 2;
 const score_t draw_score = 1;
@@ -19,6 +51,7 @@ void tournament::play() {
                 reversi::game_controller gc(*black, *white);
                 while (!gc.get_game().end())
                     gc.next_turn();
+                games_.push_back(game_info(*(begin() + i), *(begin() + j), gc.get_game()));
 
                 score_t score_black;
                 score_t score_white;
@@ -44,6 +77,20 @@ void tournament::play() {
             }
         }
     }
+}
+
+void tournament::write_games(std::string dir_name) const {
+    std::size_t i = 1;
+    for (const game_info &gi : games_) {
+        std::ostringstream ss;
+        ss << dir_name << "/GM" << i << ".rgf";
+        gi.write_rgf(ss.str());
+        i++;
+    }
+}
+
+void tournament::write_elo_changes() const {
+    //TODO
 }
 
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
 #include <gothello/elo.h>
 #include <reversi/player/player.h>
@@ -10,11 +11,15 @@ namespace gothello {
 
 class basic_player_phenotype {
     elo_t ratings_;
+    std::string name_;
 public:
     virtual ~basic_player_phenotype() = default;
 
     elo_t & get_ratings() { return ratings_; }
     const elo_t & get_ratings() const { return ratings_; }
+
+    std::string &name() { return name_; }
+    const std::string &name() const { return name_; }
     
     virtual std::shared_ptr<reversi::player::player> get_strategy(char who) = 0;
     virtual std::string description() const = 0;
