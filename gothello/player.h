@@ -17,6 +17,7 @@ public:
     const elo_t & get_ratings() const { return ratings_; }
     
     virtual std::shared_ptr<reversi::player::player> get_strategy(char who) = 0;
+    virtual std::string description() const = 0;
 };
 typedef std::shared_ptr<basic_player_phenotype> phenotype_ptr;
 
@@ -32,6 +33,10 @@ public:
 
     virtual std::shared_ptr<reversi::player::player> get_strategy(char who) override {
         return impl_->create_player(who);
+    }
+
+    virtual std::string description() const override {
+        return impl_strategy::description();
     }
 };
 

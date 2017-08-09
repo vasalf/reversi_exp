@@ -1,9 +1,11 @@
 #pragma once
 
+#include <string>
+
 #include <genetics/genotype.h>
 
 namespace gothello {
-
+    
 template<template<typename> class strategy_t,
          class scoring_t>
 class strategy {
@@ -23,6 +25,10 @@ public:
 
     std::shared_ptr<strategy_t<scoring_wrapped_t> > create_player(char who) {
         return std::make_shared<strategy_t<scoring_wrapped_t> >(who, s_.wrapped());
+    }
+
+    static std::string description() {
+        return strategy_t<scoring_wrapped_t>::description();
     }
 };
 

@@ -25,6 +25,8 @@ public:
                     return scoring_(fa) > scoring_(fb);
             });
     }
+
+    static std::string description() { return "BS" + scoring_scheme::description(); }
 };
 
 }

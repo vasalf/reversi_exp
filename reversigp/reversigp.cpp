@@ -2,12 +2,14 @@
 #include <random>
 #include <cstdio>
 #include <algorithm>
+#include <sstream>
 
 #include <gothello/gothello.h>
 #include <gothello/strategy.h>
 #include <gothello/scoring.h>
 #include <gothello/player.h>
 #include <gothello/sigsegv.h>
+#include <gothello/rsf.h>
 #include <genetics/genetics.h>
 #include <strategy/best_scoring.h>
 
@@ -34,6 +36,11 @@ int main() {
         phenotype->get_ratings() = 1500;
         genetics::genotype genotype = strategy.get_genotype();
         player_ptr player = std::make_shared<gothello::player>(genotype, phenotype);
+
+        std::ostringstream ss;
+        ss << "/tmp/G0PBSWQN" << i << ".rsf";
+        write_rsf(ss.str(), player);
+        
         p->push_back(player);
     }
     

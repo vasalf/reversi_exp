@@ -16,6 +16,8 @@ public:
     virtual ~random() = default;
 
     virtual std::pair<int, int> make_turn(const field &f) override;
+
+    static std::string description() { return "RN"; }
 };
 
 }

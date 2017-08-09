@@ -14,6 +14,7 @@ namespace scoring {
 
 struct by_score {
     int operator()(const field& field);
+    static std::string description() { return "SC"; }
 };
 
 class scoring_file_exception final : public std::exception {
@@ -26,6 +27,15 @@ public:
     }
 };
 
+template<class T>
+inline std::string type_description() { return ""; }
+
+template<>
+inline std::string type_description<double>() { return "DF"; }
+
+template<>
+inline std::string type_description<int>() { return "ID"; }
+    
 template<typename score_type>
 class weighted_quater {
 public:
@@ -113,6 +123,8 @@ public:
         }
         return ans;
     }
+
+    static std::string description() { return "WQ" + type_description<score_type>(); }
 };
     
 }

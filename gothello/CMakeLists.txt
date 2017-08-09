@@ -7,5 +7,6 @@ add_library (gothello STATIC
   gothello.cpp
   tournament.cpp
   elo.cpp
-  sigsegv.cpp)
+  sigsegv.cpp
+  rsf.cpp)
 target_link_libraries (gothello dl)
