@@ -10,14 +10,20 @@ include_directories (${CMAKE_CURRENT_SOURCE_DIR}/..)
 
 add_executable (test_genotype test_genotype.cpp)
 target_link_libraries (test_genotype genetics)
-
 add_test (Genotype test_genotype)
 
-add_executable (test_genotype_to_phenotype_conversions test_genotype_to_phenotype_conversions.cpp)
+add_executable (test_genotype_to_phenotype_conversions
+  test_genotype_to_phenotype_conversions.cpp)
 target_link_libraries (test_genotype_to_phenotype_conversions
   genetics
   gothello
   reversi)
-
 add_test (GenotypeToPhenotypeConversions
   test_genotype_to_phenotype_conversions)
+
+add_executable (test_rsf test_rsf.cpp)
+target_link_libraries (test_rsf
+  genetics
+  gothello
+  reversi)
+add_test (RsfReadWrite test_rsf)

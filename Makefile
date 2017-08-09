@@ -213,6 +213,19 @@ test_genotype/fast:
 .PHONY : test_genotype/fast
 
 #=============================================================================
+# Target rules for targets named test_rsf
+
+# Build rule for target.
+test_rsf: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 test_rsf
+.PHONY : test_rsf
+
+# fast build rule for target.
+test_rsf/fast:
+	$(MAKE) -f test/CMakeFiles/test_rsf.dir/build.make test/CMakeFiles/test_rsf.dir/build
+.PHONY : test_rsf/fast
+
+#=============================================================================
 # Target rules for targets named test_genotype_to_phenotype_conversions
 
 # Build rule for target.
@@ -241,6 +254,7 @@ help:
 	@echo "... reversi-cl"
 	@echo "... reversigp"
 	@echo "... test_genotype"
+	@echo "... test_rsf"
 	@echo "... test_genotype_to_phenotype_conversions"
 .PHONY : help
 

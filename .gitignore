@@ -15,6 +15,7 @@ reversigp/reversigp
 Testing/*
 test/test_genotype
 test/test_genotype_to_phenotype_conversions
+test/test_rsf
 
 # libraries
 reversi/libreversi.a
