@@ -23,11 +23,12 @@ void genetics_engine::play_tournaments(std::string writedir) {
                       std::back_inserter(t));
 
             std::ostringstream tname;
-            tname << writedir << "/TN" << nt + 1 << "T" << ctn << ".rgf";
+            tname << writedir << "/TN" << nt + 1 << "T" << ctn;
             
             t.prepare();
             t.play();
-            t.write_games(tname.str());
+            t.write_games(tname.str() + ".rgf");
+            t.write_json(tname.str() + ".json");
             t.write_elo_changes();
             ctn++;
         }

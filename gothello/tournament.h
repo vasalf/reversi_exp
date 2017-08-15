@@ -39,6 +39,8 @@ struct game_info {
     
 class tournament : public std::vector<std::shared_ptr<player> > {
     std::vector<game_info> games_;
+    std::vector<score_t> scores_;
+    std::vector<elo_t> start_elo_;
     
 public:
     tournament() : std::vector<std::shared_ptr<player> >() {}
@@ -47,6 +49,7 @@ public:
     void prepare();
     void play();
     void write_games(std::string filename) const;
+    void write_json(std::string filename) const;
     void write_elo_changes() const;
 };
 
