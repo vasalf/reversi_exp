@@ -1,8 +1,9 @@
+#include <sstream>
 #include <gothello/gothello.h>
 
 namespace gothello {
 
-void genetics_engine::play_tournaments() {
+void genetics_engine::play_tournaments(std::string writedir) {
     std::vector<std::shared_ptr<player> > players;
     for (auto &p : populations_)
         for (auto &q : *p)
@@ -11,6 +12,7 @@ void genetics_engine::play_tournaments() {
         std::sort(players.begin(), players.end(), [](const auto &a, const auto &b) -> bool {
                 return a->get_phenotype()->get_ratings() > b->get_phenotype()->get_ratings();
             });
+        std::size_t ctn = 1;
         for (std::size_t i = 0; i < players.size(); i += config.tournament_size) {
             std::size_t j = i + config.tournament_size;
             if (j > players.size())
@@ -19,7 +21,15 @@ void genetics_engine::play_tournaments() {
             tournament t;
             std::copy(players.begin() + i, players.begin() + j,
                       std::back_inserter(t));
+
+            std::ostringstream tname;
+            tname << writedir << "/TN" << nt + 1 << "T" << ctn << ".rgf";
+            
+            t.prepare();
             t.play();
+            t.write_games(tname.str());
+            t.write_elo_changes();
+            ctn++;
         }
     }
 }

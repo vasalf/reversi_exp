@@ -38,7 +38,7 @@ int main() {
         player_ptr player = std::make_shared<gothello::player>(genotype, phenotype);
 
         std::ostringstream ss;
-        ss << "/tmp/G0PBSWQN" << i << ".rsf";
+        ss << "/tmp/reversi_exp/G0PBSWQN" << i << ".rsf";
         write_rsf(ss.str(), player);
         
         p->push_back(player);
@@ -49,7 +49,7 @@ int main() {
 
     int ng = 1;
     while (true) {
-        eng.play_tournaments();
+        eng.play_tournaments("/tmp/reversi_exp/tn");
         std::cout << "played tournaments" << std::endl;
         eng.new_generation();
         double s = 0, n = 0;

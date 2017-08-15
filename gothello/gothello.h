@@ -80,7 +80,7 @@ public:
         populations_.push_back(std::make_shared<population_storer<strategy_t> >(population));
     }
     
-    void play_tournaments();
+    void play_tournaments(std::string writedir);
 
     void /* Here comes the young, the */ new_generation();
 

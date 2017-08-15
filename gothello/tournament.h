@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <exception>
+#include <fstream>
 
 #include <reversi/game.h>
 #include <genetics/genetics.h>
@@ -33,12 +34,11 @@ struct game_info {
         : record(game.record()), black(b), white(w), end_field(game.current_position()) {}
     virtual ~game_info() = default;
     
-    void write_rgf(std::string filename) const;
+    void write_rgf(std::ofstream &ofs) const;
 };
     
 class tournament : public std::vector<std::shared_ptr<player> > {
     std::vector<game_info> games_;
-    std::vector<elo_t> start_elo_;
     
 public:
     tournament() : std::vector<std::shared_ptr<player> >() {}
@@ -46,7 +46,7 @@ public:
 
     void prepare();
     void play();
-    void write_games(std::string dir_name) const;
+    void write_games(std::string filename) const;
     void write_elo_changes() const;
 };
 

@@ -8,34 +8,25 @@
 
 namespace gothello {
 
-static inline void write_size_t(std::size_t s, std::ofstream &ofs) {
-    ofs.write(reinterpret_cast<char *>(&s), sizeof(std::size_t));
+template<class integral>
+static inline void write_integral(integral s, std::ofstream &ofs) {
+    ofs.write(reinterpret_cast<char *>(&s), sizeof(integral));
 }
 
-void game_info::write_rgf(std::string filename) const {
-    std::ofstream ofs(filename, std::ios::binary);
-    if (!ofs)
-        throw rgf_exception("Could not open file " + filename + " for writing");
-
-    write_size_t(black->get_phenotype()->name().size(), ofs);
+void game_info::write_rgf(std::ofstream &ofs) const {
+    write_integral<std::size_t>(black->get_phenotype()->name().size(), ofs);
     ofs.write(black->get_phenotype()->name().c_str(), black->get_phenotype()->name().size());
-    write_size_t(white->get_phenotype()->name().size(), ofs);
+    write_integral<std::size_t>(white->get_phenotype()->name().size(), ofs);
     ofs.write(white->get_phenotype()->name().c_str(), white->get_phenotype()->name().size());
 
-    write_size_t(record.size(), ofs);
+    write_integral<std::size_t>(record.size(), ofs);
     for (std::pair<int, int> p : record) {
-        write_size_t(p.first, ofs);
-        write_size_t(p.second, ofs);
-    }
-
-    ofs.close();
-}
-
-void tournament::prepare() {
-    for (std::shared_ptr<player> p : *this) {
-        start_elo_.push_back(p->get_phenotype()->get_ratings());
+        write_integral<char>(p.first, ofs);
+        write_integral<char>(p.second, ofs);
     }
 }
+
+void tournament::prepare() {}
 
 const score_t win_score = 2;
 const score_t draw_score = 1;
@@ -79,18 +70,23 @@ void tournament::play() {
     }
 }
 
-void tournament::write_games(std::string dir_name) const {
-    std::size_t i = 1;
+void tournament::write_games(std::string filename) const {
+    std::ofstream ofs(filename, std::ios::binary);
+    if (!ofs)
+        throw rgf_exception("Could not open file " + filename + " for writing.");
+    
     for (const game_info &gi : games_) {
-        std::ostringstream ss;
-        ss << dir_name << "/GM" << i << ".rgf";
-        gi.write_rgf(ss.str());
-        i++;
+        gi.write_rgf(ofs);
     }
+
+    ofs.close();
 }
 
 void tournament::write_elo_changes() const {
-    //TODO
+    for (std::size_t i = 0; i != size(); i++) {
+        elo_t new_elo = (*(begin() + i))->get_phenotype()->get_ratings();
+        (*(begin() + i))->get_phenotype()->ratings_history().push_back(new_elo);
+    }
 }
 
 }
