@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include <cmath>
+#include <exception>
 
 #include <gothello/elo.h>
 #include <gothello/tournament.h>
@@ -12,15 +13,43 @@
 
 namespace gothello {
 
+class json_file_exception : public std::exception {
+public:
+    json_file_exception(std::string reason)
+        : reason_(reason) {}
+    virtual ~json_file_exception() {}
+
+    virtual const char *what() const noexcept override {
+        return reason_.c_str();
+    }
+
+private:
+    std::string reason_;
+};
+    
 class genetics_engine {
 public:
+
+    template<class writer_t>
+    static void json_write_individual(writer_t &writer, genetics::basic_individual_ptr<phenotype_ptr> player) {
+        writer.StartObject();
+        writer.Key("name");
+        writer.String(player->get_phenotype()->name().c_str());
+        writer.Key("ratings_history");
+        writer.StartArray();
+        for (elo_t elo : player->get_phenotype()->ratings_history())
+            writer.Int(elo);
+        writer.EndArray();
+        writer.EndObject();
+    }
+    
     struct {
         std::size_t ntournaments = 5;
         std::size_t tournament_size = 20;
         double alivers = 0.8;
         double mutation_frequency = 4.0;
     } config;
-
+    
     class basic_population_storer {
     public:
         virtual ~basic_population_storer() = default;
@@ -32,6 +61,21 @@ public:
         virtual genetics::basic_individual_ptr<phenotype_ptr> operator[](std::size_t i) = 0;
         virtual iterator begin() = 0;
         virtual iterator end() = 0;
+        virtual std::string description() const = 0;
+
+        template<class writer_t>
+        void write_json(writer_t &writer) {
+            writer.StartObject();
+            writer.Key("type");
+            writer.String(this->description().c_str());
+            writer.Key("individuals");
+            writer.StartArray();
+            for (genetics::basic_individual_ptr<phenotype_ptr> individual : *this) {
+                genetics_engine::json_write_individual(writer, individual);
+            }
+            writer.EndArray();
+            writer.EndObject();
+        }
     };
 
     template<class strategy_t>
@@ -67,6 +111,10 @@ public:
         virtual iterator end() override {
             return population_->end();
         }
+
+        virtual std::string description() const override {
+            return strategy_t::description();
+        }
     };
 
 private:
@@ -91,6 +139,8 @@ public:
 
     std::size_t size() const { return populations_.size(); }
     const std::shared_ptr<basic_population_storer>& operator[](std::size_t i) const { return populations_[i]; };
+
+    void write_json(std::string filename);
 };
     
 }

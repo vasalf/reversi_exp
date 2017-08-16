@@ -34,6 +34,7 @@ int main() {
         strategy_t strategy(scoring);
         gothello::phenotype_ptr phenotype = std::make_shared<phenotype_t>(strategy);
         phenotype->get_ratings() = 1500;
+        phenotype->ratings_history() = {1500};
         genetics::genotype genotype = strategy.get_genotype();
         player_ptr player = std::make_shared<gothello::player>(genotype, phenotype);
 
@@ -64,6 +65,9 @@ int main() {
             }
         }
         printf("new generation (ng=%d, elo: min=%d, max=%d, avg=%.02f)\n", ng, mn, mx, s / n);
+        char filename[3+4+1+4+1];
+        sprintf(filename, "GEN%04d.json", ng);
+        eng.write_json("/tmp/reversi_exp/" + std::string(filename));
         ++ng;
     }
     

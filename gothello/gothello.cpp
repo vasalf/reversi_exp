@@ -1,5 +1,10 @@
 #include <sstream>
+#include <fstream>
+
 #include <gothello/gothello.h>
+
+#include <rapidjson/writer.h>
+#include <rapidjson/stringbuffer.h>
 
 namespace gothello {
 
@@ -43,6 +48,25 @@ void genetics_engine::new_generation() {
             it++;
         }
     }
+}
+
+void genetics_engine::write_json(std::string filename) {
+    rapidjson::StringBuffer s;
+    rapidjson::Writer<rapidjson::StringBuffer> writer(s);
+
+    writer.StartObject();
+    writer.Key("populations");
+    writer.StartArray();
+    for (const auto &p : populations_)
+        p->write_json(writer);
+    writer.EndArray();
+    writer.EndObject();
+
+    std::ofstream ofs(filename);
+    if (!ofs)
+        throw json_file_exception("Could not open file " + filename + " for writing.");
+    ofs << s.GetString();
+    ofs.close();
 }
 
 }
