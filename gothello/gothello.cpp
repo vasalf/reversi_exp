@@ -41,12 +41,10 @@ void genetics_engine::play_tournaments(std::string writedir) {
 }
 
 void genetics_engine::new_generation() {
+    ++generation_number_;
     for (auto &p : populations_) {
-        auto it = p->new_generation(*this);
-        while (it != p->end()) {
-            (*it)->get_phenotype()->get_ratings() = 1500;
-            (*it)->get_phenotype()->ratings_history() = { 1500 };
-            it++;
+        if (p->config.evolving) {
+            p->new_generation(*this);
         }
     }
 }

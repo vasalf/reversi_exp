@@ -46,7 +46,9 @@ int main() {
     }
     
     gothello::genetics_engine eng;
-    eng.add_population<strategy_t>(p);
+    eng.add_population<strategy_t>(p, "BSWQ");
+    (*std::prev(eng.end()))->config.alivers = 0.8 * sz;
+    (*std::prev(eng.end()))->config.mutation_frequency = 4.5;
 
     int ng = 1;
     while (true) {
