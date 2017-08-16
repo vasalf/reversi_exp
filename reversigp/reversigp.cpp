@@ -52,6 +52,9 @@ int main() {
     while (true) {
         eng.play_tournaments("/tmp/reversi_exp/tn");
         std::cout << "played tournaments" << std::endl;
+        char filename[3+4+3+1+4+1];
+        sprintf(filename, "GEN%04d.old.json", ng);
+        eng.write_json("/tmp/reversi_exp/" + std::string(filename));
         eng.new_generation();
         double s = 0, n = 0;
         gothello::elo_t mn = std::numeric_limits<gothello::elo_t>::max();
@@ -65,8 +68,7 @@ int main() {
             }
         }
         printf("new generation (ng=%d, elo: min=%d, max=%d, avg=%.02f)\n", ng, mn, mx, s / n);
-        char filename[3+4+1+4+1];
-        sprintf(filename, "GEN%04d.json", ng);
+        sprintf(filename, "GEN%04d.new.json", ng);
         eng.write_json("/tmp/reversi_exp/" + std::string(filename));
         ++ng;
     }

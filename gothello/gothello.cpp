@@ -45,6 +45,7 @@ void genetics_engine::new_generation() {
         auto it = p->new_generation(*this);
         while (it != p->end()) {
             (*it)->get_phenotype()->get_ratings() = 1500;
+            (*it)->get_phenotype()->ratings_history() = { 1500 };
             it++;
         }
     }
