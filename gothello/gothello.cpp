@@ -61,6 +61,9 @@ void genetics_engine::new_generation() {
             p->new_generation(*this);
         }
     }
+    for (auto &storer : populations_) {
+        storer->clear_ratings_history();
+    }
 }
 
 void genetics_engine::write_json(std::string filename) {
@@ -172,7 +175,7 @@ std::string engine::launch_filesystem_manager::finalizing_file_path(std::size_t 
     std::ostringstream path;
     path << workdir_
          << "/generation" << get_generation_desc(gen_no)
-         << "ready";
+         << "/ready";
 
     return path.str();
 }
@@ -356,7 +359,7 @@ engine::engine(std::string launch_params_file, bool continue_c) {
     fs_ = engine::launch_filesystem_manager(config.workdir);
 
     verify_member(conf, "ntournaments");
-    verify_member_type(conf["ntorunaments"].IsUint(), "ntournaments");
+    verify_member_type(conf["ntournaments"].IsUint(), "ntournaments");
     eng_.config.ntournaments = conf["ntournaments"].GetUint();
 
     verify_member(conf, "tournament_size");

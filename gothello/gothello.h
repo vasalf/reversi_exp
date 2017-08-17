@@ -70,6 +70,7 @@ public:
         virtual std::string description() const = 0;
         virtual const std::string &name() const = 0;
         virtual void prepare_phenotypes(const genetics_engine &eng) = 0;
+        virtual void clear_ratings_history() = 0;
 
         template<class writer_t>
         void write_json(writer_t &writer) {
@@ -153,8 +154,14 @@ public:
         virtual void prepare_phenotypes(const genetics_engine &eng) override {
             prepare_phenotypes(eng.current_generation_number(), eng.config.start_elo, begin(), end());
         }
-    };
 
+        virtual void clear_ratings_history() override {
+            for (auto q : *population_) {
+                q->get_phenotype()->ratings_history() = { q->get_phenotype()->get_ratings() };
+            }
+        }
+    };
+    
 private:
     std::vector<std::shared_ptr<basic_population_storer> > populations_;
     std::size_t generation_number_ = 0;
@@ -240,7 +247,7 @@ public:
     }
 
     void write_population_new_json() {
-        eng_.write_json(fs_.population_old_json_path(eng_.current_generation_number()));
+        eng_.write_json(fs_.population_new_json_path(eng_.current_generation_number()));
     }
 
     void write_rsf();

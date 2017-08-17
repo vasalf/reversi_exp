@@ -3,76 +3,61 @@
 #include <cstdio>
 #include <algorithm>
 #include <sstream>
+#include <limits>
 
 #include <gothello/gothello.h>
-#include <gothello/strategy.h>
-#include <gothello/scoring.h>
-#include <gothello/player.h>
+#include <gothello/elo.h>
 #include <gothello/sigsegv.h>
-#include <gothello/rsf.h>
-#include <genetics/genetics.h>
-#include <strategy/best_scoring.h>
 
-const int sz = 100;
+#include <gflags/gflags.h>
 
-int main() {
+DEFINE_string(params, "", "Path to JSON file with launch params");
+
+bool is_non_empty([[gnu::unused]] const char *flagname, const std::string &value) {
+    return value != "";
+}
+
+DEFINE_validator(params, &is_non_empty);
+
+DEFINE_bool(continue, false, "Continue an interrupted launch");
+
+int main(int argc, char *argv[]) {
     utils::sigsegv_handler sh;
 
-    typedef reversi::scoring::weighted_quater<double> scoring_t;
-    typedef gothello::scoring::weighted_quater<double> scoring_w_t;
-    typedef gothello::strategy<reversi::player::best_scoring, scoring_w_t> strategy_t;
-    typedef gothello::player_phenotype<strategy_t> phenotype_t;
-    typedef std::shared_ptr<gothello::player> player_ptr;
-    typedef gothello::player_factory<strategy_t> factory_t;
+    gflags::SetUsageMessage("libgothello interface to generate reversi algorithms");
+    gflags::SetVersionString("1.0.0");
 
-    auto p = std::make_shared<genetics::population<gothello::phenotype_ptr, factory_t> >();
+    gflags::ParseCommandLineFlags(&argc, &argv, true);
 
-    for (int i = 0; i < sz; i++) {
-        scoring_t scoring;
-        scoring.gen_random<std::mt19937>();
-        scoring_w_t scoring_w(scoring);
-        strategy_t strategy(scoring);
-        gothello::phenotype_ptr phenotype = std::make_shared<phenotype_t>(strategy);
-        phenotype->get_ratings() = 1500;
-        phenotype->ratings_history() = {1500};
-        genetics::genotype genotype = strategy.get_genotype();
-        player_ptr player = std::make_shared<gothello::player>(genotype, phenotype);
+    gothello::engine eng(FLAGS_params, FLAGS_continue);
 
-        std::ostringstream ss;
-        ss << "/tmp/reversi_exp/G0PBSWQN" << i << ".rsf";
-        write_rsf(ss.str(), player);
-        
-        p->push_back(player);
-    }
-    
-    gothello::genetics_engine eng;
-    eng.add_population<strategy_t>(p, "BSWQ");
-    (*std::prev(eng.end()))->config.alivers = 0.8 * sz;
-    (*std::prev(eng.end()))->config.mutation_frequency = 4.5;
+    gflags::ShutDownCommandLineFlags();
 
-    int ng = 1;
     while (true) {
-        eng.play_tournaments("/tmp/reversi_exp/tn");
+        eng.play_tournaments();
         std::cout << "played tournaments" << std::endl;
-        char filename[3+4+3+1+4+1];
-        sprintf(filename, "GEN%04d.old.json", ng);
-        eng.write_json("/tmp/reversi_exp/" + std::string(filename));
-        eng.new_generation();
-        double s = 0, n = 0;
-        gothello::elo_t mn = std::numeric_limits<gothello::elo_t>::max();
-        gothello::elo_t mx = std::numeric_limits<gothello::elo_t>::min();
-        for (const auto &storer : eng) {
-            n += storer->size();
-            for (const auto &strategy : *storer) {
-                s += strategy->get_phenotype()->get_ratings();
-                mn = std::min(mn, strategy->get_phenotype()->get_ratings());
-                mx = std::max(mx, strategy->get_phenotype()->get_ratings());
+
+        std::size_t total_size = 0;
+        gothello::elo_t sum_elo = 0;
+        gothello::elo_t min_elo = std::numeric_limits<gothello::elo_t>::max();
+        gothello::elo_t max_elo = std::numeric_limits<gothello::elo_t>::min();
+        for (auto storer : eng.eng())
+            for (auto p : *storer) {
+                total_size++;
+                sum_elo += p->get_phenotype()->get_ratings();
+                min_elo = std::min(min_elo, p->get_phenotype()->get_ratings());
+                max_elo = std::max(max_elo, p->get_phenotype()->get_ratings());
             }
-        }
-        printf("new generation (ng=%d, elo: min=%d, max=%d, avg=%.02f)\n", ng, mn, mx, s / n);
-        sprintf(filename, "GEN%04d.new.json", ng);
-        eng.write_json("/tmp/reversi_exp/" + std::string(filename));
-        ++ng;
+        printf("generation %lu (elo min=%d max=%d avg=%.02f)\n",
+               eng.eng().current_generation_number(),
+               min_elo, max_elo, (double)sum_elo / total_size);
+        
+        eng.write_population_old_json();
+        eng.write_rsf();
+        eng.new_generation();
+        eng.write_population_new_json();
+        eng.finalize_generation();
     }
     
+    return 0;
 }

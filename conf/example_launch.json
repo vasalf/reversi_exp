@@ -1,0 +1,34 @@
+{
+  "workdir": "/tmp/reversi_exp/workdir",
+  "ntournaments": 5,
+  "tournament_size": 20,
+  "start_elo": 1500,
+  "populations": [
+    {
+      "name": "BSWQFL",
+      "strategy": "best_scoring",
+      "scoring": "weighted_quater",
+      "score_type": "double",
+      "size": 50,
+      "alivers": 40,
+      "mutation_frequency": 10.0
+    },
+    {
+      "name": "BSWQINT32",
+      "strategy": "best_scoring",
+      "scoring": "weighted_quater",
+      "score_type": "int32",
+      "size": 48,
+      "alivers": 39,
+      "mutation_frequency": 10.0
+    },
+    {
+      "name": "BSWQINT64",
+      "strategy": "best_scoring",
+      "scoring": "weighted_quater",
+      "score_type": "int64",
+      "size": 2,
+      "evolving": false
+    }
+  ]
+}
