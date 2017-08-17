@@ -185,5 +185,66 @@ public:
 
     void write_json(std::string filename);
 };
+
+class gothello_exception : public std::exception {
+public:
+    gothello_exception(std::string reason)
+        : reason_(reason) {}
+    virtual ~gothello_exception() {}
+
+    virtual const char *what() const noexcept override {
+        return reason_.c_str();
+    }
+    
+private:
+    std::string reason_;
+};
+
+class engine {
+    class launch_filesystem_manager {
+        std::string workdir_;
+    public:
+        launch_filesystem_manager(std::string workdir);
+        launch_filesystem_manager() {}
+
+        std::string tournaments_path(std::size_t gen_no) const;
+        std::string population_old_json_path(std::size_t gen_no) const;
+        std::string population_new_json_path(std::size_t gen_no) const;
+        std::string rsf_path(std::size_t gen_no, std::shared_ptr<player> t_player) const;
+        std::string finalizing_file_path(std::size_t gen_no) const;
+    };
+
+    genetics_engine eng_;
+    launch_filesystem_manager fs_;
+    
+public:
+    struct {
+        std::string workdir;
+    } config;
+
+    engine(std::string launch_params_file, bool continue_c = false);
+
+    genetics_engine &eng() { return eng_; }
+    const genetics_engine &eng() const { return eng_; }
+
+    void play_tournaments() {
+        eng_.play_tournaments(fs_.tournaments_path(eng_.current_generation_number()));
+    }
+    
+    void write_population_old_json() {
+        eng_.write_json(fs_.population_old_json_path(eng_.current_generation_number()));
+    }
+
+    void new_generation() {
+        eng_.new_generation();
+    }
+
+    void write_population_new_json() {
+        eng_.write_json(fs_.population_old_json_path(eng_.current_generation_number()));
+    }
+
+    void write_rsf();
+    void finalize_generation();
+};
     
 }

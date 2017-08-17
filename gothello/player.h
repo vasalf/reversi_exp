@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <string>
+#include <stdexcept>
 
 #include <gothello/elo.h>
 #include <reversi/player/player.h>
@@ -77,4 +78,13 @@ public:
     }
 };
 
+class crushing_factory {
+public:
+    std::shared_ptr<player> operator()([[gnu::unused]] const genetics::genotype &g) {
+        // Normally this line should not be executed...
+        throw std::logic_error("Attempt to construct a non-evolvable player from genotype...");
+        return NULL;
+    }
+};
+    
 }
