@@ -7,6 +7,12 @@ cmake_install.cmake
 install_manifest.txt
 CTestTestfile.cmake
 
+# pycache
+**/__pycache__/*
+
+# database
+**/dp.sqlite3
+
 # executables
 reversi-cl/reversi-cl
 reversigp/reversigp
