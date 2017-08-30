@@ -11,7 +11,7 @@ CTestTestfile.cmake
 **/__pycache__/*
 
 # database
-**/dp.sqlite3
+**/db.sqlite3
 
 # executables
 reversi-cl/reversi-cl

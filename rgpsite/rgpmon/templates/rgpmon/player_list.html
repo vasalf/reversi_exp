@@ -1,0 +1,7 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'rgpmon/mspcp.css' %}" />
+
+{% for player in player_list %}
+<p>{{ player.name }} (name={{ player.name }} elo={{ player.elo }} population={{ player.population.name }} g_start={{ player.g_start }} g_end={{ player.g_end }})</p>
+{% endfor %}

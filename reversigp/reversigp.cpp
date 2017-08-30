@@ -54,9 +54,9 @@ int main(int argc, char *argv[]) {
         
         eng.write_population_old_json();
         eng.write_rsf();
+        eng.finalize_generation();
         eng.new_generation();
         eng.write_population_new_json();
-        eng.finalize_generation();
     }
     
     return 0;
