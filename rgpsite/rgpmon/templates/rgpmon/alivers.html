@@ -4,6 +4,7 @@
 
 <table>
   <tr>
+    <th class="placecell">#</th>
     <th>Player</th>
     <th>ELO</th>
     <th>Population</th>
@@ -11,10 +12,21 @@
   </tr>  
   {% for player in player_list %}
   <tr>
+    <td class="placecell">{{ forloop.counter }}</td>
     <td>{{ player.name }}</td>
-    <td class="elocell">{{ player.elo  }}</td>
-    <td>{{ player.population.name }}</td>
-    <td>{{ player.g_start }}</td>
+    {% if player.elo >= 1600 %}
+      <td id="elocell" class="red">{{ player.elo  }}</td>
+    {% elif player.elo >= 1450 %}
+      <td id="elocell" class="yellow">{{ player.elo }}</td>
+    {% elif player.elo >= 1300 %}
+      <td id="elocell" class="blue">{{ player.elo }}</td>
+    {% elif player.elo >= 1000 %}
+      <td id="elocell" class="green">{{ player.elo }}</td>
+    {% else %}
+      <td id="elocell" class="gray">{{ player.elo }}</td>
+    {% endif %}
+    <td><a href="/population/{{ player.population.name }}/alivers" class="invlink">{{ player.population.name }}</a></td>
+    <td class="generationcell">{{ player.g_start }}</td>
   </tr>
   {% endfor %}
 </table>

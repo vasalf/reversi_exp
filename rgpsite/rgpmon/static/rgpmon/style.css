@@ -1,5 +1,13 @@
-table, td, th {
-    border: 1px solid #ddd;
+table, td {
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    border-bottom: 3px solid black;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
 }
 
 table {
@@ -7,10 +15,50 @@ table {
 }
 
 td, th {
-    padding: 15px;
+    padding: 10px;
     text-align: left;
 }
 
-.elocell {
+.placecell {
     font-weight: bold;
+    text-align: center;
+}
+
+.generationcell {
+    text-align: center;
+}
+
+a.invlink:link, a.invlink:visited {
+    text-decoration: none;
+    color: black;
+}
+
+a.invlink:hover, a.invlink:active {
+    text-decoration: underline;
+    color: black;
+}
+
+#elocell {
+    font-weight: bold;
+    text-align: center;
+}
+
+#elocell.red {
+    color: red;
+}
+
+#elocell.yellow {
+    color: #ffbb00;
+}
+
+#elocell.blue {
+    color: blue;
+}
+
+#elocell.green {
+    color: green;
+}
+
+#elocell.gray {
+    color: gray;
 }
