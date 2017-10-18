@@ -1,0 +1,56 @@
+{% load static %}
+
+<style>
+  .infod {
+    visibility: hidden;
+    position: relative;
+    display: inline-block;
+  }
+
+  .infod .infot {
+    width: 200px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    padding: 8px 0;
+    border-radius: 5px;
+    position: absolute;
+    left: -100px;
+    top: 10px;
+  }
+
+  .infod .infot::after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent;
+    border-bottom-color: #555;
+  }
+
+  .show {
+    visibility: visible;
+  }
+
+  .clickable {
+    cursor: pointer;
+  }
+
+  .notclickable {
+
+  }
+</style>
+
+<script>
+  function rpClick(e) {
+    var popup = document.getElementById("pu" + e.target.id);
+    popup.classList.toggle("show");
+  }
+</script>
+
+{{ progress_graph_svg }}
+
+

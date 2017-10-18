@@ -115,13 +115,22 @@ def get_or_create_player(population, plcfg, gex):
     p.save()
     return p
 
-    
+
+def get_or_create_tournament(generation, name):
+    print("tournament", "generation{:04d}/{}".format(generation, name))
+    try:
+        t = Tournament.objects.get(name=name, generation=generation)
+    except ObjectDoesNotExist:
+        t = Tournament()
+        t.name = name
+        t.generation = generation
+        t.save()
+    return t
+
+
 def load_generation(cfg, generation):
     gf = GenerationFiles(cfg, generation)
-
-    # load tournaments
-    # TODO
-
+    
     # load players
     with open(str(gf.populations_old_json()), 'r') as f:
         pn = json.load(f)
@@ -132,7 +141,30 @@ def load_generation(cfg, generation):
             pl.g_end = generation
             pl.save()
 
-        
+    total_players = 0
+    for p in cfg.populations:
+        total_players += p.size
+
+    # load tournaments
+    if generation == 0:
+        return
+    for nt in range(1, cfg.ntournaments + 1):
+        ctn = 1
+        for i in range(0, total_players, cfg.tournament_size):
+            t = get_or_create_tournament(generation, gf.tournament_name(nt, ctn))
+            with open(str(gf.tournament_json(nt, ctn)), 'r') as f:
+                tj = json.load(f)
+            for player in tj["tournament"]:
+                p = Player.objects.get(name=player["player"])
+                tr = TournamentResult()
+                tr.player = p
+                tr.tournament = t
+                tr.place = player["place"]
+                tr.elo_change = player["end_elo"] - player["start_elo"]
+                tr.save()
+            ctn += 1
+
+                
 def load():
     if Launch.objects.count() != 1:
         raise DbLoadError("Wrong amount of Launch objects in the db")
@@ -141,7 +173,7 @@ def load():
     cfg = LaunchConfig(launch.launch_cfg)
 
     while (is_generation_dumped(cfg, launch.last_generation + 1)):
-        print("generation", launch.last_generation)
+        print("generation", launch.last_generation + 1)
         load_generation(cfg, launch.last_generation + 1)
         launch.last_generation += 1
     launch.save()

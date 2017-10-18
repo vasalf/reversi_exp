@@ -38,8 +38,8 @@ class Tournament(models.Model):
     
     
 class TournamentResult(models.Model):
-    player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='who_played')
-    tournament = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='when_played')
+    player = models.ForeignKey(Player, on_delete=models.CASCADE)
+    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
     place = models.IntegerField()
     elo_change = models.IntegerField()
 

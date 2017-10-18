@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views import generic
+from django.utils.safestring import mark_safe
 
 from .models import *
+from .progress_graph import draw_progress_graph
 
 # Create your views here.
 
@@ -32,3 +34,14 @@ def population_alivers(request, population):
                                         population=p).order_by('-elo')
     return render(request, template_name, { 'player_list': player_list })
     
+
+def player_info(request, player):
+    template_name='rgpmon/player.html'
+
+    p = Player.objects.filter(name=player)
+    change_list = TournamentResult.objects.filter(player=p)
+
+    graph = draw_progress_graph(change_list)
+    
+    return render(request, template_name, { 'change_list': change_list,
+                                            'progress_graph_svg': mark_safe(graph) })
