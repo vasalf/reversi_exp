@@ -43,22 +43,26 @@ a.invlink:hover, a.invlink:active {
     text-align: center;
 }
 
-#elocell.red {
+#elotext {
+    font-weight: bold;
+}
+
+#elocell.red, #elotext.red {
     color: red;
 }
 
-#elocell.yellow {
+#elocell.yellow, #elotext.yellow {
     color: #ffbb00;
 }
 
-#elocell.blue {
+#elocell.blue, #elotext.blue {
     color: blue;
 }
 
-#elocell.green {
+#elocell.green, #elotext.green {
     color: green;
 }
 
-#elocell.gray {
+#elocell.gray, #elotext.gray {
     color: gray;
 }
